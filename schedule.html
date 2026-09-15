@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="hy">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8-Ա դասարան</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: rgb(115, 170, 157);
+        min-height: 100vh;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        max-width: 900px;
+        width: 100%;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        text-align: center;
+        color: #20c997;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #999;
+        margin-bottom: 40px;
+        font-size: 1.1em;
+      }
+
+      .buttons-container {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .day-btn {
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f0f0f0;
+        color: #333;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .day-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .day-btn.active {
+        background: #20c997;
+        color: white;
+        transform: scale(1.05);
+      }
+
+      .schedule-container {
+        animation: fadeIn 0.4s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .day-title {
+        text-align: center;
+        font-size: 1.8em;
+        color: #20c997;
+        margin-bottom: 25px;
+        font-weight: 600;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      tr {
+        transition: background-color 0.2s ease;
+      }
+
+      tr:hover {
+        background-color: #f8f9ff;
+      }
+
+      td {
+        padding: 18px 20px;
+        text-align: left;
+        font-size: 16px;
+        border-bottom: 2px solid #eee;
+      }
+
+      td:first-child {
+        font-weight: 700;
+        color: white;
+        background: #26a69a 100%;
+        text-align: center;
+        width: 60px;
+      }
+
+      td:not(:first-child) {
+        color: #333;
+        font-weight: 500;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .schedule-day {
+        display: none;
+      }
+
+      .schedule-day.active {
+        display: table-row-group;
+      }
+
+      /* Responsive design */
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 1.8em;
+        }
+
+        .buttons-container {
+          gap: 8px;
+        }
+
+        .day-btn {
+          padding: 10px 18px;
+          font-size: 14px;
+        }
+
+        td {
+          padding: 14px 12px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>8-Ա դասարանի դասացուցակ</h1>
+
+      <div class="buttons-container">
+        <button class="day-btn active" onclick="showDay('monday')">
+          Երկուշաբթի
+        </button>
+        <button class="day-btn" onclick="showDay('tuesday')">Երեքշաբթի</button>
+        <button class="day-btn" onclick="showDay('wednesday')">
+          Չորեքշաբթի
+        </button>
+        <button class="day-btn" onclick="showDay('thursday')">Հինգշաբթի</button>
+        <button class="day-btn" onclick="showDay('friday')">Ուրբաթ</button>
+      </div>
+
+      <div class="schedule-container">
+        <div class="day-title" id="dayTitle">Երկուշաբթի</div>
+
+        <table id="scheduleTable">
+          <tbody id="scheduleBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      const schedule = {
+        monday: {
+          name: "Երկուշաբթի",
+          classes: [
+            { hour: 1, subject: "Քիմիա" },
+            { hour: 2, subject: "Գրականություն" },
+            { hour: 3, subject: "Հայաստանի պատմություն" },
+            { hour: 4, subject: "Երկրաչափություն" },
+            { hour: 5, subject: "Ֆիզիկա" },
+            { hour: 6, subject: "Հանրահաշիվ" },
+            { hour: 7, subject: "Հայոց լեզու" },
+          ],
+        },
+        tuesday: {
+          name: "Երեքշաբթի",
+          classes: [
+            { hour: 1, subject: "Կենսաբանություն" },
+            { hour: 2, subject: "Աշխարհագրություն" },
+            { hour: 3, subject: "Մասնագիտական կողմնորոշում" },
+            { hour: 4, subject: "Հանրահաշիվ" },
+            { hour: 5, subject: "Հայոց լեզու" },
+            { hour: 6, subject: "Համաշխարհային պատմություն" },
+            { hour: 7, subject: "Ֆիզկուլտուրա" },
+          ],
+        },
+        wednesday: {
+          name: "Չորեքշաբթի",
+          classes: [
+            { hour: 1, subject: "Հայոց լեզու" },
+            { hour: 2, subject: "Քիմիա" },
+            { hour: 3, subject: "Ֆիզիկա" },
+            { hour: 4, subject: "Անգլերեն" },
+            { hour: 5, subject: "Ռուսաց լեզու" },
+            { hour: 6, subject: "Երկրաչափություն" },
+            { hour: 7, subject: "Հայաստանի պատմություն" },
+          ],
+        },
+        thursday: {
+          name: "Հինգշաբթի",
+          classes: [
+            { hour: 1, subject: "Ֆիզկուլտուրա" },
+            { hour: 2, subject: "Հանրահաշիվ" },
+            { hour: 3, subject: "Համաշխարհային պատմություն" },
+            { hour: 4, subject: "ԹԳՀԳ" },
+            { hour: 5, subject: "Հասարակագիտություն" },
+            { hour: 6, subject: "ՆԶՊ" },
+            { hour: 7, subject: "Կերպարվեստ" },
+          ],
+        },
+        friday: {
+          name: "Ուրբաթ",
+          classes: [
+            { hour: 1, subject: "Հայաստանի պատմություն" },
+            { hour: 2, subject: "Երկրաչափություն" },
+            { hour: 3, subject: "Կենսաբանություն" },
+            { hour: 4, subject: "Աշխարհագրություն" },
+            { hour: 5, subject: "Գրականություն" },
+            { hour: 6, subject: "Անգլերեն" },
+            { hour: 7, subject: "Ռուսաց լեզու" },
+          ],
+        },
+      };
+
+      function showDay(day) {
+        // Update buttons
+        document.querySelectorAll(".day-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // Update title
+        document.getElementById("dayTitle").textContent = schedule[day].name;
+
+        // Update table
+        const tbody = document.getElementById("scheduleBody");
+        tbody.innerHTML = "";
+
+        schedule[day].classes.forEach((cls) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${cls.hour}</td>
+            <td>${cls.subject}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // Initialize with Monday
+      showDay("monday");
+    </script>
+  </body>
+</html>
